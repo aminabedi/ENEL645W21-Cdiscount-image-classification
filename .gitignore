@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#Train set
+train_shuffled_100cat.csv
+
 # C extensions
 *.so
 
