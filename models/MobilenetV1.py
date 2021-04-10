@@ -133,7 +133,7 @@ test_image_generator = val_image_datagen.flow_from_directory(DATA_ROOT+"test/",
                                                      class_mode="categorical", classes=[str(i) for i in range(99)],batch_size = 32,seed=seed, target_size=(180, 180),color_mode='rgb')
 
 
-# In[7]:
+# In[4]:
 
 
 x, y = next(train_image_generator)
@@ -171,11 +171,11 @@ print("Test:", x.shape, y.shape, y[:10], y.max(), np.unique(y))
 # 
 # ### Our trained-from-scratch convolutional model which gave the best result, but far less than the pre-trained ones
 
-# In[4]:
+# In[5]:
 
 
 
-def my_model_cnn(ishape = (180,180,3), k = NUM_CATEGORIES, lr = 1e-3):
+def my_model_cnn(ishape = (180,180,3), lr = 1e-3):
     input_layer = tf.keras.layers.Input(shape=ishape, dtype="float")
     l1 = tf.keras.layers.Conv2D(32, (3,3), padding = 'same', activation= 'relu')(input_layer)
     l2 = tf.keras.layers.Conv2D(32, (3,3), padding = 'same', activation= 'relu')(l1)
@@ -197,15 +197,15 @@ def my_model_cnn(ishape = (180,180,3), k = NUM_CATEGORIES, lr = 1e-3):
     l14 = tf.keras.layers.Conv2D(512, (3,3), padding = 'same', activation='relu')(l13)
     l14_drop = tf.keras.layers.Dropout(0.25)(l14)
     flat = tf.keras.layers.Flatten()(l14_drop)
-    out = tf.keras.layers.Dense(k, activation= 'softmax')(flat)
+    out = tf.keras.layers.Dense(NUM_CATEGORIES, activation= 'softmax')(flat)
     model = tf.keras.models.Model(inputs = input_layer, outputs = out)
-    model.compile(optimizer = tf.keras.optimizers.Adam(learning_rate=lr), loss = 'sparse_categorical_crossentropy', metrics= ["accuracy"])
+    model.compile(optimizer = tf.keras.optimizers.Adam(learning_rate=lr), loss = 'categorical_crossentropy', metrics= ["accuracy"])
     return model
 cnn_model = my_model_cnn()
 print(cnn_model.summary())
 
 
-# In[7]:
+# In[6]:
 
 
 from time import time; 
